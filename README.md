@@ -13,7 +13,9 @@ baselines (best-ask, TWAP, VWAP).
 | `README.md` | This document. |
 
 ## Quick start
+## Suggested Improvement
 
+To further improve fill realism, add queue position modeling using historical fill probabilities for each venue. This would allow the allocator to better estimate the likelihood of limit order fills and adjust allocations dynamically based on observed queue dynamics.
 ```bash
 pip install numpy pandas matplotlib       # ≈ 25 s on a clean venv
 python backtest.py                        # prints JSON, writes results.png
