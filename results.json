@@ -1,0 +1,35 @@
+Iteration 10/50 – best cost so far: 1113715.00
+Iteration 20/50 – best cost so far: 1113715.00
+Iteration 30/50 – best cost so far: 1113715.00
+Iteration 40/50 – best cost so far: 1113715.00
+Iteration 50/50 – best cost so far: 1113715.00
+{
+  "best_parameters": {
+    "lambda_over": 0.001,
+    "lambda_under": 0.1,
+    "theta_queue": 0.005
+  },
+  "optimal_strategy": {
+    "total_cost": 1113715.0,
+    "avg_price": 222.743
+  },
+  "baselines": {
+    "best_ask": {
+      "total_cost": 1114117.28,
+      "avg_price": 222.823456
+    },
+    "twap": {
+      "total_cost": 1114656.3800000001,
+      "avg_price": 222.93127600000003
+    },
+    "vwap": {
+      "total_cost": 1114117.28,
+      "avg_price": 222.823456
+    }
+  },
+  "savings_bps": {
+    "vs_best_ask": 3.6120551487591346,
+    "vs_twap": 8.452611305406869,
+    "vs_vwap": 3.6120551487591346
+  }
+}

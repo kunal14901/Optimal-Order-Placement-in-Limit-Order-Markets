@@ -1,2 +1,19 @@
-# Optimal-Order-Placement-in-Limit-Order-Markets
-The script optimizes a 5,000-share buy order using real market data and three risk parameters to minimize costs, comparing results to best-ask, TWAP, and VWAP baselines, and reports cost savings in basis points.
+# Smart-Order-Router ― Trial Task
+
+This repo contains a **stand-alone back-test** of a static Cont–Kukanov Smart
+Order Router (SOR) for a 5 000-share parent order, benchmarked against three
+baselines (best-ask, TWAP, VWAP).
+
+## Files
+| File | Purpose |
+|------|---------|
+| `backtest.py` | Loads *l1_day.csv*, runs a 50-iteration parameter search, prints JSON with all results, and saves `results.png` (bar chart of average execution price). Imports **only** `json`, `datetime`, `numpy`, `pandas`, and `matplotlib.pyplot`. |
+| `results.png` | Example output plot (optional artefact). |
+| `results.json` | Example run-output captured from stdout (optional artefact). |
+| `README.md` | This document. |
+
+## Quick start
+
+```bash
+pip install numpy pandas matplotlib       # ≈ 25 s on a clean venv
+python backtest.py                        # prints JSON, writes results.png
