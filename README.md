@@ -1,41 +1,45 @@
 ```markdown
-# Cont & Kukanov Smart Order Router Backtest
+# Cont & Kukanov Smart-Order-Router Back-test
 
-Optimal execution strategy for splitting **5,000-share orders** across fragmented markets using the Cont & Kukanov static cost model. Benchmarked against three baselines: Best-Ask, 60s TWAP, and VWAP.
+Optimal execution strategy for splitting a **5,000-share parent order** across fragmented U.S. equity venues, using the static cost model of Cont & Kukanov and benchmarked against three naïve schemes (Best-Ask, 60 s TWAP, VWAP).
 
 ---
 
 ## Implementation Overview
 
-**Core Components**  
-- **Market Data Processor**: Validates L1 feed, groups by `ts_event` and venue
-- **Static Allocator**: Exhaustive 100-share grid search (`allocate()`)
-- **Backtest Engine**: Chronological execution with partial-fill tracking
-- **Baselines**: Naïve Best-Ask, 60s TWAP, size-weighted VWAP
+- **Market-data processor** — validates L1 feed, groups by `ts_event` & venue  
+- **Static allocator** — exhaustive 100-share grid (`allocate()`)  
+- **Back-test engine** — chronological execution with partial-fill tracking  
+- **Baselines** — Best-Ask, 60 s TWAP, VWAP (size-weighted)  
 
 ---
 
-## Parameter Optimization
-50-iteration random search with seed=42 over:
+## Parameter Optimisation
+
+Random search (50 draws, seed = 42) over the grids below, followed by three hand-picked refinements:
+
+```python
+lambda_over_range  = [0.001, 0.005, 0.01, 0.05, 0.1]
+lambda_under_range = [0.001, 0.005, 0.01, 0.05, 0.1, 0.5]
+theta_queue_range  = [0.0001, 0.0005, 0.001, 0.005, 0.01]
 ```
-lambda_over_range = [0.001, 0.005, 0.01, 0.05, 0.1]
-lambda_under_range = [0.001, 0.005, 0.01, 0.05, 0.1, 0.5] 
-theta_queue_range = [0.0001, 0.0005, 0.001, 0.005, 0.01]
-```
-*Design bias*: Prioritizes λ_under > λ_over per original paper's market impact assumptions.
+
+> **Design choice:** search biases toward **λ_under > λ_over** in line with the paper’s assumption that under-fills are costlier than over-fills.
 
 ---
 
 ## Key Features
-- NASDAQ/NYSE-specific fee/rebate mapping
-- Queue risk penalty (θ) for mis-execution
-- Linear market impact model ($0.0005/share)
-- Maker rebate accounting for unfilled limit orders
+
+- Venue-specific fee / rebate maps (NASDAQ & NYSE examples)  
+- Queue-risk penalty θ for mis-execution  
+- Linear market-impact cost + maker-rebate adjustment  
+- Realistic partial-fill simulation per venue depth  
 
 ---
 
 ## Sample Output
-```
+
+```json
 {
   "best_parameters": {
     "lambda_over": 0.032,
@@ -47,9 +51,9 @@ theta_queue_range = [0.0001, 0.0005, 0.001, 0.005, 0.01]
     "avg_price": 222.764
   },
   "baselines": {
-    "best_ask": {"total_cost": 1114117.28, "avg_price": 222.823},
-    "twap": {"total_cost": 1114015.42, "avg_price": 222.803},
-    "vwap": {"total_cost": 1113955.31, "avg_price": 222.791}
+    "best_ask": { "total_cost": 1114117.28, "avg_price": 222.823 },
+    "twap":     { "total_cost": 1114015.42, "avg_price": 222.803 },
+    "vwap":     { "total_cost": 1113955.31, "avg_price": 222.791 }
   },
   "savings_bps": {
     "vs_best_ask": 5.31,
@@ -58,35 +62,47 @@ theta_queue_range = [0.0001, 0.0005, 0.001, 0.005, 0.01]
   }
 }
 ```
+
 ![Execution Price Comparison](results.png)
 
 ---
 
-## Suggested Improvement
-**Queue Position Modeling**  
-Add historical fill probability estimates:
-```
+## Suggested Improvement – Queue-Position Modelling
+
+Add a fill-probability–adjusted size to better reflect queue position:
+
+```python
 def queue_adjusted_size(row):
     hist_fill_rate = get_hist_fill_rate(row.publisher_id, row.ask_sz_00)
     return min(row.ask_sz_00, hist_fill_rate * row.ask_sz_00)
 ```
 
+This converts “displayed depth” into “expected executable shares,” reducing over-fill risk in thin books.
+
 ---
 
 ## How to Run
-```
+
+```bash
 pip install numpy pandas matplotlib
 python backtest.py > results.json
 ```
-**Runtime**: ~10s on M1 MacBook Pro (60k messages, 2 venues)  
-**Output**: JSON results + price comparison chart (`results.png`)
+
+**Runtime:** ≈ 10 s on an M1 MacBook Pro (60 k quotes, two venues).
 
 ---
 
 ## File Structure
-| File | Purpose |
-|------|---------|
-| `backtest.py` | Core optimization engine |
-| `l1_day.csv` | Sample L1 data (13:36-13:45 UTC) |
-| `results.json` | Output with parameters/baselines |
-| `results.png` | Visualization of execution prices |
+
+| File           | Purpose                            |
+|----------------|------------------------------------|
+| `backtest.py`  | Core optimisation & back-test      |
+| `l1_day.csv`   | Sample L1 market-data slice        |
+| `results.json` | Example JSON output (optional)     |
+| `results.png`  | Bar chart of avg execution price   |
+| `README.md`    | This document                     |
+
+---
+
+*Author: `<your-name>` · `<YYYY-MM-DD>`*  
+```
