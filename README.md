@@ -96,9 +96,10 @@ python backtest.py > results.json
 
 | File           | Purpose                            |
 |----------------|------------------------------------|
+| `README.md`    | This document                      |
 | `backtest.py`  | Core optimisation & back-test      |
 | `results.json` | Example JSON output (optional)     |
 | `results.png`  | Bar chart of avg execution price   |
-| `README.md`    | This document                     |
+
 
 
