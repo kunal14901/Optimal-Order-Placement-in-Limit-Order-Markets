@@ -1,29 +1,38 @@
 ```markdown
 # Cont & Kukanov Smart Order Router Backtest
 
-Optimal execution strategy implementation for splitting 5,000-share orders across fragmented markets using the Cont & Kukanov static cost model.
+Optimal execution strategy for splitting **5,000-share orders** across fragmented markets using the Cont & Kukanov static cost model. Benchmarked against three baselines: Best-Ask, 60s TWAP, and VWAP.
+
+---
 
 ## Implementation Overview
+
 **Core Components**  
-- **Market Data Processor**: Validates L1 feed types and groups by timestamp/venue  
-- **Static Allocator**: 100-share grid search per snapshot (`allocate()`)  
-- **Backtest Engine**: Chronological execution with partial fill tracking  
-- **Baselines**: Best-ask, 60s TWAP, VWAP (size-weighted)  
+- **Market Data Processor**: Validates L1 feed, groups by `ts_event` and venue
+- **Static Allocator**: Exhaustive 100-share grid search (`allocate()`)
+- **Backtest Engine**: Chronological execution with partial-fill tracking
+- **Baselines**: Naïve Best-Ask, 60s TWAP, size-weighted VWAP
+
+---
 
 ## Parameter Optimization
-Hybrid search over 50 iterations:
+50-iteration random search with seed=42 over:
 ```
 lambda_over_range = [0.001, 0.005, 0.01, 0.05, 0.1]
-lambda_under_range = [0.001, 0.005, 0.01, 0.05, 0.1, 0.5]
+lambda_under_range = [0.001, 0.005, 0.01, 0.05, 0.1, 0.5] 
 theta_queue_range = [0.0001, 0.0005, 0.001, 0.005, 0.01]
 ```
-Prioritizes λ_under > λ_over per original paper's market impact assumptions.
+*Design bias*: Prioritizes λ_under > λ_over per original paper's market impact assumptions.
+
+---
 
 ## Key Features
-- NASDAQ/NYSE-specific fee/rebate mapping  
-- Queue risk penalty (θ) for mis-execution  
-- Linear market impact modeling  
-- Partial fill simulation across venues  
+- NASDAQ/NYSE-specific fee/rebate mapping
+- Queue risk penalty (θ) for mis-execution
+- Linear market impact model ($0.0005/share)
+- Maker rebate accounting for unfilled limit orders
+
+---
 
 ## Sample Output
 ```
@@ -51,6 +60,8 @@ Prioritizes λ_under > λ_over per original paper's market impact assumptions.
 ```
 ![Execution Price Comparison](results.png)
 
+---
+
 ## Suggested Improvement
 **Queue Position Modeling**  
 Add historical fill probability estimates:
@@ -60,21 +71,22 @@ def queue_adjusted_size(row):
     return min(row.ask_sz_00, hist_fill_rate * row.ask_sz_00)
 ```
 
+---
+
 ## How to Run
 ```
 pip install numpy pandas matplotlib
 python backtest.py > results.json
 ```
-**Runtime**: ~45s on M1 MacBook Pro  
-**Output**: JSON results + price comparison chart
+**Runtime**: ~10s on M1 MacBook Pro (60k messages, 2 venues)  
+**Output**: JSON results + price comparison chart (`results.png`)
+
+---
 
 ## File Structure
 | File | Purpose |
 |------|---------|
 | `backtest.py` | Core optimization engine |
-| `l1_day.csv` | Sample market data (13:36-13:45 UTC) |
+| `l1_day.csv` | Sample L1 data (13:36-13:45 UTC) |
 | `results.json` | Output with parameters/baselines |
 | `results.png` | Visualization of execution prices |
-```
-
-This README concisely addresses all requirements while maintaining technical precision and readability. It highlights the key innovation (queue-aware allocation) while providing actionable implementation details.
