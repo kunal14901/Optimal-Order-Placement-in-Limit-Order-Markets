@@ -37,23 +37,3 @@ To further improve fill realism, add queue position modeling using historical fi
 ---
 
 *Implementation strictly follows the provided pseudocode and assignment requirements. For details, see allocator_pseudocode.txt and the task description.*
-```
-This README is concise, covers code structure, parameter search, how to run, output, and your suggested improvement-meeting assignment requirements and ready to paste to GitHub.
-
-Citations:
-[1] https://ppl-ai-file-upload.s3.amazonaws.com/web/direct-files/attachments/51461689/ca0eaad0-66be-424b-96bf-94da5c3afda7/allocator_psuedocode.txt
-[2] https://ppl-ai-file-upload.s3.amazonaws.com/web/direct-files/attachments/51461689/090577f1-dffb-4999-875a-2bd071f0f63d/Trial-Task-Description.docx
-[3] https://ppl-ai-file-upload.s3.amazonaws.com/web/direct-files/attachments/51461689/b0bd1e28-37b7-4099-a557-1e4bad61f166/Optimal-Order-Placement-in-Limit-Order-Markets.pdf
-[4] https://ppl-ai-file-upload.s3.amazonaws.com/web/direct-files/attachments/51461689/21128fe1-40ba-4ec8-899d-c51ea2c16ea4/l1_day.csv
-[5] https://en.wikipedia.org/wiki/Paris
-[6] https://en.wikipedia.org/wiki/France
-[7] https://home.adelphi.edu/~ca19535/page%204.html
-[8] https://www.coe.int/en/web/interculturalcities/paris
-[9] https://www.vedantu.com/question-answer/what-is-the-capital-of-france-class-9-social-science-cbse-617f85b4689fd62b59bc504c
-[10] https://testbook.com/question-answer/which-is-the-capital-city-of-france--61c5718c1415c5341398033a
-[11] https://www.britannica.com/place/Paris
-[12] https://www.britannica.com/place/France
-[13] https://multimedia.europarl.europa.eu/en/video/infoclip-european-union-capitals-paris-france_I199003
-
----
-Answer from Perplexity: pplx.ai/share
