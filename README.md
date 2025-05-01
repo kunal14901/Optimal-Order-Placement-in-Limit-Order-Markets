@@ -102,7 +102,4 @@ python backtest.py > results.json
 | `results.png`  | Bar chart of avg execution price   |
 | `README.md`    | This document                     |
 
----
 
-*Author: `<your-name>` · `<YYYY-MM-DD>`*  
-```
