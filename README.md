@@ -97,7 +97,6 @@ python backtest.py > results.json
 | File           | Purpose                            |
 |----------------|------------------------------------|
 | `backtest.py`  | Core optimisation & back-test      |
-| `l1_day.csv`   | Sample L1 market-data slice        |
 | `results.json` | Example JSON output (optional)     |
 | `results.png`  | Bar chart of avg execution price   |
 | `README.md`    | This document                     |
