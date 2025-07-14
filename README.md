@@ -1,6 +1,6 @@
 # Cont & Kukanov Smart-Order-Router Back-test
 
-This project implements an optimal execution strategy for splitting a **5,000-share parent order** across fragmented U.S. equity venues, using the static cost model of Cont & Kukanov. The strategy is benchmarked against three naïve schemes: Best-Ask, 60 s TWAP, and VWAP.
+This project implements an optimal execution strategy for splitting a **5,000-share parent order** across fragmented U.S. equity venues, using the static cost model of Cont & Kukanov. This strategy is benchmarked against three naïve schemes: Best-Ask, 60 s TWAP, and VWAP.
 
 ## Implementation Overview
 
@@ -80,3 +80,4 @@ python backtest.py > results.json
 | `README.md`    | This document                    |
 | `backtest.py`  | Core optimisation & back-test    |
 | `results.json` | Example JSON output (optional)   |
+| `results.png`  | Bar chart of avg execution price |
