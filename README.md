@@ -1,41 +1,30 @@
-```markdown
 # Cont & Kukanov Smart-Order-Router Back-test
 
-Optimal execution strategy for splitting a **5,000-share parent order** across fragmented U.S. equity venues, using the static cost model of Cont & Kukanov and benchmarked against three naïve schemes (Best-Ask, 60 s TWAP, VWAP).
-
----
+This project implements an optimal execution strategy for splitting a **5,000-share parent order** across fragmented U.S. equity venues, using the static cost model of Cont & Kukanov. The strategy is benchmarked against three naïve schemes: Best-Ask, 60 s TWAP, and VWAP.
 
 ## Implementation Overview
 
-- **Market-data processor** — validates L1 feed, groups by `ts_event` & venue  
-- **Static allocator** — exhaustive 100-share grid (`allocate()`)  
-- **Back-test engine** — chronological execution with partial-fill tracking  
-- **Baselines** — Best-Ask, 60 s TWAP, VWAP (size-weighted)  
-
----
+- Market-data processor: Validates L1 feed, groups by `ts_event` and venue
+- Static allocator: Exhaustive 100-share grid (`allocate()`)
+- Back-test engine: Chronological execution with partial-fill tracking
+- Baselines: Best-Ask, 60 s TWAP, VWAP (size-weighted)
 
 ## Parameter Optimisation
 
-Random search (50 draws, seed = 42) over the grids below, followed by three hand-picked refinements:
+Random search (50 draws, seed = 42) over the following grids, followed by three hand-picked refinements:
 
-```python
-lambda_over_range  = [0.001, 0.005, 0.01, 0.05, 0.1]
-lambda_under_range = [0.001, 0.005, 0.01, 0.05, 0.1, 0.5]
-theta_queue_range  = [0.0001, 0.0005, 0.001, 0.005, 0.01]
-```
+- `lambda_over_range`: [0.001, 0.005, 0.01, 0.05, 0.1]
+- `lambda_under_range`: [0.001, 0.005, 0.01, 0.05, 0.1, 0.5]
+- `theta_queue_range`: [0.0001, 0.0005, 0.001, 0.005, 0.01]
 
-> **Design choice:** search biases toward **λ_under > λ_over** in line with the paper’s assumption that under-fills are costlier than over-fills.
-
----
+*Design choice:* The search is biased toward **λ_under > λ_over** in line with the paper’s assumption that under-fills are costlier than over-fills.
 
 ## Key Features
 
-- Venue-specific fee / rebate maps (NASDAQ & NYSE examples)  
-- Queue-risk penalty θ for mis-execution  
-- Linear market-impact cost + maker-rebate adjustment  
-- Realistic partial-fill simulation per venue depth  
-
----
+- Venue-specific fee/rebate maps (NASDAQ & NYSE examples)
+- Queue-risk penalty θ for mis-execution
+- Linear market-impact cost plus maker-rebate adjustment
+- Realistic partial-fill simulation per venue depth
 
 ## Sample Output
 
@@ -63,13 +52,9 @@ theta_queue_range  = [0.0001, 0.0005, 0.001, 0.005, 0.01]
 }
 ```
 
-![Execution Price Comparison](results.png)
+## Suggested Improvement: Queue-Position Modelling
 
----
-
-## Suggested Improvement – Queue-Position Modelling
-
-Add a fill-probability–adjusted size to better reflect queue position:
+To better reflect queue position, add a fill-probability–adjusted size:
 
 ```python
 def queue_adjusted_size(row):
@@ -79,8 +64,6 @@ def queue_adjusted_size(row):
 
 This converts “displayed depth” into “expected executable shares,” reducing over-fill risk in thin books.
 
----
-
 ## How to Run
 
 ```bash
@@ -88,18 +71,12 @@ pip install numpy pandas matplotlib
 python backtest.py > results.json
 ```
 
-**Runtime:** ≈ 10 s on an M1 MacBook Pro (60 k quotes, two venues).
-
----
+**Runtime:** Approximately 10 seconds on an M1 MacBook Pro (60,000 quotes, two venues).
 
 ## File Structure
 
-| File           | Purpose                            |
-|----------------|------------------------------------|
-| `README.md`    | This document                      |
-| `backtest.py`  | Core optimisation & back-test      |
-| `results.json` | Example JSON output (optional)     |
-| `results.png`  | Bar chart of avg execution price   |
-
-
-
+| File           | Purpose                          |
+|----------------|----------------------------------|
+| `README.md`    | This document                    |
+| `backtest.py`  | Core optimisation & back-test    |
+| `results.json` | Example JSON output (optional)   |
